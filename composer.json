@@ -1,0 +1,31 @@
+{
+    "name": "jmlallier/php-helpers",
+    "description": "A set of useful helper classes and methods",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "John-Michael L'Allier",
+            "email": "jmlallier@me.com"
+        }
+    ],
+    "require": {},
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    },
+    "autoload": {
+        "psr-4": {
+            "Jmlallier\\PHPHelpers\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Jmlallier\\PHPHelpers\\Test\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit"
+    },
+    "config": {
+        "sort-packages": true
+  }
+}
