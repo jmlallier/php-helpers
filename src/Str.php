@@ -6,11 +6,11 @@ class Str {
     /**
      * Determine if a given string contains a given substring.
      *
-     * @param  string  $subject
      * @param  string|array  $searches
+     * @param  string  $subject
      * @return bool
      */
-    public static function contains( $searches, $subject ) {
+    public static function contains( $searches, string $subject ) {
         foreach ( (array) $searches as $search ) {
             if ( '' !== $search && false !== strpos( $subject, $search ) ) {
                 return true;
@@ -26,7 +26,7 @@ class Str {
      * @param  string  $value
      * @return bool
      */
-    public static function is( $possibilities, $value ) {
+    public static function is( $possibilities, string $value ) {
         foreach ( (array) $possibilities as $possibility ) {
             if ( $possibility === $value ) {
                 return true;
@@ -50,15 +50,17 @@ class Str {
     /**
      * Replace each occurrence of a given value in the string.
      *
-     * @param  string  $search
-     * @param  string  $replace
+     * @param  string|int  $search
+     * @param  string|int  $replace
      * @param  string  $subject
      * @return string
      */
-    public static function replace( $search, $replace, $subject ) {
+    public static function replace( $search, $replace, string $subject ) {
         if ( empty( $search ) ) {
             return $subject;
         }
+        $search = (string) $search;
+        $replace = (string) $replace;
         $position = strpos( $subject, $search );
         if ( false !== $position ) {
             $subject = substr_replace( $subject, $replace, $position, strlen( $search ) );
@@ -70,12 +72,13 @@ class Str {
     /**
      * Determines whether string `$subject` ends with string `$search`.
      *
-     * @param string $search
+     * @param string|int $search
      * @param string $needle
      * @return boolean
      */
-    public static function endsWith($search, $subject)
+    public static function endsWith($search, string $subject)
     {
+        $search = (string) $search;
         $length = strlen($search);
         if ($length == 0) {
             return true;
@@ -91,7 +94,7 @@ class Str {
      * @param string $appendWith
      * @return string the concatenated string
      */
-    public static function append( $append, $subject = '', $appendWith = ' ' ) {
+    public static function append( string $append, string $subject = '', string $appendWith = ' ' ) {
         if ( empty( $append ) ) {
             return $subject;
         }

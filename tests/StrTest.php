@@ -82,6 +82,15 @@ class StrTest extends TestCase
     }
 
     /** @test */
+    public function it_forces_string_search_for_ending_search()
+    {
+        $subject = "We are #1";
+        $this->assertTrue(Str::endsWith(1, $subject));
+        $this->assertTrue(Str::endsWith('#1', $subject));
+    }
+
+
+    /** @test */
     public function it_appends_a_string_to_another_string()
     {
         $original = "I'm a little";
