@@ -115,4 +115,21 @@ class Str {
         }
         return $prepend . $prependWith . $subject;
     }
+
+    /**
+     * Combines multiple strings together with glue.
+     *
+     * @param string|array $one either a string or an array of strings
+     * @param string $two either the second string to combine or the glue to combine an array of strings with
+     * @param string $glue the glue to combine strings with if $one is not an array
+     * @return string $final the combined string
+     */
+    public static function combine( $one, $two = ' ', $glue = ' ' ) {
+        if ( is_array($one) ) {
+            $glue = $two;
+            $final = implode($glue, $one);
+            return trim($final, $glue);
+        }
+        return trim($one . $glue . $two);
+    }
 }

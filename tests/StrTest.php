@@ -108,4 +108,32 @@ class StrTest extends TestCase
         $this->assertEquals("let the dogs out?", Str::prepend('', $original));
     }
 
+    /** @test */
+    public function it_combines_two_strings()
+    {
+        $string_one = "anchovy";
+        $string_two = "pizza";
+        $strings = [$string_one, $string_two];
+        $this->assertEquals("anchovy pizza", Str::combine($string_one, $string_two));
+        $this->assertEquals("anchovy pizza", Str::combine($strings));
+        $this->assertEquals("anchovy-pizza", Str::combine($strings, '-'));
+    }
+
+    /** @test */
+    public function it_combines_many_strings()
+    {
+        $strings = [
+            'one',
+            'two',
+            'three',
+            'four',
+            'five',
+            'six',
+            'seven',
+        ];
+        $this->assertEquals('one_two_three_four_five_six_seven', Str::combine($strings, '_'));
+    }
+
+
+
 }
