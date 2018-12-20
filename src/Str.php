@@ -94,7 +94,7 @@ class Str {
      * @param string $appendWith
      * @return string the concatenated string
      */
-    public static function append( string $append, string $subject = '', string $appendWith = ' ' ) {
+    public static function append( string $append, $subject = '', $appendWith = ' ' ) {
         if ( empty( $append ) ) {
             return $subject;
         }
