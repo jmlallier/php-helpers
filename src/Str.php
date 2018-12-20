@@ -10,7 +10,7 @@ class Str {
      * @param  string  $subject
      * @return bool
      */
-    public static function contains( $searches, string $subject ) {
+    public static function contains( $searches, $subject ) {
         foreach ( (array) $searches as $search ) {
             if ( '' !== $search && false !== strpos( $subject, $search ) ) {
                 return true;
@@ -26,7 +26,7 @@ class Str {
      * @param  string  $value
      * @return bool
      */
-    public static function is( $possibilities, string $value ) {
+    public static function is( $possibilities, $value ) {
         foreach ( (array) $possibilities as $possibility ) {
             if ( $possibility === $value ) {
                 return true;
@@ -55,7 +55,7 @@ class Str {
      * @param  string  $subject
      * @return string
      */
-    public static function replace( $search, $replace, string $subject ) {
+    public static function replace( $search, $replace, $subject ) {
         if ( empty( $search ) ) {
             return $subject;
         }
@@ -76,7 +76,7 @@ class Str {
      * @param string $needle
      * @return boolean
      */
-    public static function endsWith($search, string $subject)
+    public static function endsWith($search, $subject)
     {
         $search = (string) $search;
         $length = strlen($search);
@@ -94,7 +94,7 @@ class Str {
      * @param string $appendWith
      * @return string the concatenated string
      */
-    public static function append( string $append, $subject = '', $appendWith = ' ' ) {
+    public static function append( $append, $subject = '', $appendWith = ' ' ) {
         if ( empty( $append ) ) {
             return $subject;
         }
