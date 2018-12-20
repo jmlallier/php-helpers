@@ -14,7 +14,7 @@ class Arr {
        $results = [];
 
        foreach ($array as $key => $item) {
-           $results[] = $func($item);
+           $results[] = $func($item, $key);
        }
 
        return $results;
@@ -31,7 +31,7 @@ class Arr {
        $results = [];
 
        foreach ($array as $key => $item) {
-           if ($func($item)) {
+           if ($func($item, $key)) {
                $results[$key] = $item;
            }
        }
@@ -47,8 +47,8 @@ class Arr {
      * @return void
      */
     public static function each(array $array = [], callable $func) {
-       foreach ($array as $item) {
-           $func($item);
+       foreach ($array as $key => $item) {
+           $func($item, $key);
        }
     }
 
