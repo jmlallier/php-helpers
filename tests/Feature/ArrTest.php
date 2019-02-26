@@ -3,7 +3,6 @@ namespace Jmlallier\PHPHelpers\Test;
 
 use Jmlallier\PHPHelpers\Arr;
 use Jmlallier\PHPHelpers\Str;
-use PHPUnit\Framework\TestCase;
 
 class ArrTest extends TestCase
 {

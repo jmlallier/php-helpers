@@ -2,7 +2,6 @@
 namespace Jmlallier\PHPHelpers\Test;
 
 use Jmlallier\PHPHelpers\Str;
-use PHPUnit\Framework\TestCase;
 
 class StrTest extends TestCase
 {
