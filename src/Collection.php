@@ -46,12 +46,18 @@ class Collection implements IteratorAggregate, Countable
 		return new static(array_combine($keys, $items));
 	}
 
+	public function first()
+	{
+		return Arr::first($this->items);
+	}
+
 	public function filter($callback)
 	{
 		return new static(array_filter($this->items, $callback));
 	}
 
-	public function flatten($depth = INF) {
+	public function flatten($depth = INF)
+	{
 		return new static(Arr::flatten($this->items, $depth));
 	}
 
@@ -72,6 +78,11 @@ class Collection implements IteratorAggregate, Countable
 	public function avg($key = null)
 	{
 		return $this->average($key);
+	}
+
+	public function last()
+	{
+		return Arr::last($this->items);
 	}
 
 	public function only($keys)
@@ -171,156 +182,158 @@ class Collection implements IteratorAggregate, Countable
 		return !$this->isEmpty();
 	}
 
-    /**
-     * Sort through each item with a callback.
-     *
-     * @param  callable|null  $callback
-     * @return static
-     */
-    public function sort(callable $callback = null)
-    {
-        $items = $this->items;
-        $callback
-            ? uasort($items, $callback)
-            : asort($items);
-        return new static($items);
-    }
-    /**
-     * Sort the collection using the given callback.
-     *
-     * @param  callable|string  $callback
-     * @param  int  $options
-     * @param  bool  $descending
-     * @return static
-     */
-    public function sortBy($callback, $options = SORT_REGULAR, $descending = false)
-    {
-        $results = [];
-        $callback = $this->valueRetriever($callback);
-        // First we will loop through the items and get the comparator from a callback
-        // function which we were given. Then, we will sort the returned values and
-        // and grab the corresponding values for the sorted keys from this array.
-        foreach ($this->items as $key => $value) {
-            $results[$key] = $callback($value, $key);
-        }
-        $descending ? arsort($results, $options)
-            : asort($results, $options);
-        // Once we have sorted all of the keys in the array, we will loop through them
-        // and grab the corresponding model so we can set the underlying items list
-        // to the sorted version. Then we'll just return the collection instance.
-        foreach (array_keys($results) as $key) {
-            $results[$key] = $this->items[$key];
-        }
-        return new static($results);
-    }
-    /**
-     * Sort the collection in descending order using the given callback.
-     *
-     * @param  callable|string  $callback
-     * @param  int  $options
-     * @return static
-     */
-    public function sortByDesc($callback, $options = SORT_REGULAR)
-    {
-        return $this->sortBy($callback, $options, true);
-    }
-    /**
-     * Sort the collection keys.
-     *
-     * @param  int  $options
-     * @param  bool  $descending
-     * @return static
-     */
-    public function sortKeys($options = SORT_REGULAR, $descending = false)
-    {
-        $items = $this->items;
-        $descending ? krsort($items, $options) : ksort($items, $options);
-        return new static($items);
-    }
-    /**
-     * Sort the collection keys in descending order.
-     *
-     * @param  int $options
-     * @return static
-     */
-    public function sortKeysDesc($options = SORT_REGULAR)
-    {
-        return $this->sortKeys($options, true);
-    }
-    /**
-     * Splice a portion of the underlying collection array.
-     *
-     * @param  int  $offset
-     * @param  int|null  $length
-     * @param  mixed  $replacement
-     * @return static
-     */
-    public function splice($offset, $length = null, $replacement = [])
-    {
-        if (func_num_args() === 1) {
-            return new static(array_splice($this->items, $offset));
-        }
-        return new static(array_splice($this->items, $offset, $length, $replacement));
-    }
-    /**
-     * Get the sum of the given values.
-     *
-     * @param  callable|string|null  $callback
-     * @return mixed
-     */
-    public function sum($callback = null)
-    {
-        if (is_null($callback)) {
-            return array_sum($this->items);
-        }
-        $callback = $this->valueRetriever($callback);
-        return $this->reduce(function ($result, $item) use ($callback) {
-            return $result + $callback($item);
-        }, 0);
-    }
-    /**
-     * Take the first or last {$limit} items.
-     *
-     * @param  int  $limit
-     * @return static
-     */
-    public function take($limit)
-    {
-        if ($limit < 0) {
-            return $this->slice($limit, abs($limit));
-        }
-        return $this->slice(0, $limit);
-    }
-
-    /**
-     * Slice the underlying collection array.
-     *
-     * @param  int  $offset
-     * @param  int  $length
-     * @return static
-     */
-    public function slice($offset, $length = null)
-    {
-        return new static(array_slice($this->items, $offset, $length, true));
-    }
-
-    /**
-     * Pass the collection to the given callback and then return it.
-     *
-     * @param  callable  $callback
-     * @return $this
-     */
-    public function tap(callable $callback)
-    {
-        $callback(new static($this->items));
-        return $this;
+	/**
+	 * Sort through each item with a callback.
+	 *
+	 * @param  callable|null  $callback
+	 * @return static
+	 */
+	public function sort(callable $callback = null)
+	{
+		$items = $this->items;
+		$callback
+			? uasort($items, $callback)
+			: asort($items);
+		return new static($items);
+	}
+	/**
+	 * Sort the collection using the given callback.
+	 *
+	 * @param  callable|string  $callback
+	 * @param  int  $options
+	 * @param  bool  $descending
+	 * @return static
+	 */
+	public function sortBy($callback, $options = SORT_REGULAR, $descending = false)
+	{
+		$results = [];
+		$callback = $this->valueRetriever($callback);
+		// First we will loop through the items and get the comparator from a callback
+		// function which we were given. Then, we will sort the returned values and
+		// and grab the corresponding values for the sorted keys from this array.
+		foreach ($this->items as $key => $value) {
+			$results[$key] = $callback($value, $key);
+		}
+		$descending ? arsort($results, $options)
+			: asort($results, $options);
+		// Once we have sorted all of the keys in the array, we will loop through them
+		// and grab the corresponding model so we can set the underlying items list
+		// to the sorted version. Then we'll just return the collection instance.
+		foreach (array_keys($results) as $key) {
+			$results[$key] = $this->items[$key];
+		}
+		return new static($results);
+	}
+	/**
+	 * Sort the collection in descending order using the given callback.
+	 *
+	 * @param  callable|string  $callback
+	 * @param  int  $options
+	 * @return static
+	 */
+	public function sortByDesc($callback, $options = SORT_REGULAR)
+	{
+		return $this->sortBy($callback, $options, true);
+	}
+	/**
+	 * Sort the collection keys.
+	 *
+	 * @param  int  $options
+	 * @param  bool  $descending
+	 * @return static
+	 */
+	public function sortKeys($options = SORT_REGULAR, $descending = false)
+	{
+		$items = $this->items;
+		$descending ? krsort($items, $options) : ksort($items, $options);
+		return new static($items);
+	}
+	/**
+	 * Sort the collection keys in descending order.
+	 *
+	 * @param  int $options
+	 * @return static
+	 */
+	public function sortKeysDesc($options = SORT_REGULAR)
+	{
+		return $this->sortKeys($options, true);
+	}
+	/**
+	 * Splice a portion of the underlying collection array.
+	 *
+	 * @param  int  $offset
+	 * @param  int|null  $length
+	 * @param  mixed  $replacement
+	 * @return static
+	 */
+	public function splice($offset, $length = null, $replacement = [])
+	{
+		if (func_num_args() === 1) {
+			return new static(array_splice($this->items, $offset));
+		}
+		return new static(array_splice($this->items, $offset, $length, $replacement));
+	}
+	/**
+	 * Get the sum of the given values.
+	 *
+	 * @param  callable|string|null  $callback
+	 * @return mixed
+	 */
+	public function sum($callback = null)
+	{
+		if (is_null($callback)) {
+			return array_sum($this->items);
+		}
+		$callback = $this->valueRetriever($callback);
+		return $this->reduce(function ($result, $item) use ($callback) {
+			return $result + $callback($item);
+		}, 0);
+	}
+	/**
+	 * Take the first or last {$limit} items.
+	 *
+	 * @param  int  $limit
+	 * @return static
+	 */
+	public function take($limit)
+	{
+		if ($limit < 0) {
+			return $this->slice($limit, abs($limit));
+		}
+		return $this->slice(0, $limit);
 	}
 
-	public function tapInto(callable $callback) {
+	/**
+	 * Slice the underlying collection array.
+	 *
+	 * @param  int  $offset
+	 * @param  int  $length
+	 * @return static
+	 */
+	public function slice($offset, $length = null)
+	{
+		return new static(array_slice($this->items, $offset, $length, true));
+	}
+
+	/**
+	 * Pass the collection to the given callback and then return it.
+	 *
+	 * @param  callable  $callback
+	 * @return $this
+	 */
+	public function tap(callable $callback)
+	{
+		$callback(new static($this->items));
+		return $this;
+	}
+
+	public function tapInto(callable $callback)
+	{
 		return new static($this->getArrayableItems($callback($this->all())));
 	}
 
-	public function newFrom(callable $callback, $with = []){
+	public function newFrom(callable $callback, $with = [])
+	{
 		return $this->tapInto($callback)->merge($this->getArrayableItems($with));
 	}
 
@@ -333,27 +346,29 @@ class Collection implements IteratorAggregate, Countable
 	 * @param callable $callback
 	 * @return Mediavine\Support\Collection
 	 */
-	public function passThrough(callable $callback) {
+	public function passThrough(callable $callback)
+	{
 		return $this->newFrom($callback, $this);
 	}
 
-	public function get($key) {
-		if ( \array_key_exists($key, $this->items)){
+	public function get($key)
+	{
+		if (\array_key_exists($key, $this->items)) {
 			return $this->getArrayableItems($this->items[$key]);
 		}
 	}
 
-    /**
-     * Transform each item in the collection using a callback.
-     *
-     * @param  callable  $callback
-     * @return $this
-     */
-    public function transform(callable $callback)
-    {
-        $this->items = $this->map($callback)->all();
-        return $this;
-    }
+	/**
+	 * Transform each item in the collection using a callback.
+	 *
+	 * @param  callable  $callback
+	 * @return $this
+	 */
+	public function transform(callable $callback)
+	{
+		$this->items = $this->map($callback)->all();
+		return $this;
+	}
 
 	/**
 	 * Return only unique items from the collection array.
@@ -385,30 +400,31 @@ class Collection implements IteratorAggregate, Countable
 		return $this->unique($key, true);
 	}
 
-    /**
-     * Chunk the underlying collection array.
-     *
-     * @param  int  $size
-     * @return static
-     */
-    public function chunk($size)
-    {
-        if ($size <= 0) {
-            return new static;
-        }
-        $chunks = [];
-        foreach (array_chunk($this->items, $size, true) as $chunk) {
-            $chunks[] = new static($chunk);
-        }
-        return new static($chunks);
-    }
+	/**
+	 * Chunk the underlying collection array.
+	 *
+	 * @param  int  $size
+	 * @return static
+	 */
+	public function chunk($size)
+	{
+		if ($size <= 0) {
+			return new static;
+		}
+		$chunks = [];
+		foreach (array_chunk($this->items, $size, true) as $chunk) {
+			$chunks[] = new static($chunk);
+		}
+		return new static($chunks);
+	}
 
-    public function chunkToArray($size) {
-        if ( $size <= 0) {
-            return [];
-        }
-        return array_chunk($this->items, $size, false);
-    }
+	public function chunkToArray($size)
+	{
+		if ($size <= 0) {
+			return [];
+		}
+		return array_chunk($this->items, $size, false);
+	}
 
 	/**
 	 * Reset the keys on the underlying array.
@@ -442,7 +458,8 @@ class Collection implements IteratorAggregate, Countable
 		return new static(array_combine($this->all(), $this->getArrayableItems($values)));
 	}
 
-	public function count() {
+	public function count()
+	{
 		return count($this->items);
 	}
 
@@ -535,6 +552,30 @@ class Collection implements IteratorAggregate, Countable
 		return array_shift($this->items);
 	}
 
+	/**
+	 * Wrap the given value in a collection if applicable.
+	 *
+	 * @param  mixed  $value
+	 * @return static
+	 */
+	public static function wrap($value)
+	{
+		return $value instanceof self
+			? new static($value)
+			: new static(Arr::wrap($value));
+	}
+
+	/**
+	 * Get the underlying items from the given collection if applicable.
+	 *
+	 * @param  array|static  $value
+	 * @return array
+	 */
+	public static function unwrap($value)
+	{
+		return $value instanceof self ? $value->all() : $value;
+	}
+
 	protected function getArrayableItems($items)
 	{
 		if (is_array($items)) {
@@ -572,101 +613,101 @@ class Collection implements IteratorAggregate, Countable
 		};
 	}
 
-    /**
-     * Convert the object into something JSON serializable.
-     *
-     * @return array
-     */
-    public function jsonSerialize()
-    {
-        return array_map(function ($value) {
-            if ($value instanceof JsonSerializable) {
-                return $value->jsonSerialize();
-            } elseif ($value instanceof Arrayable) {
-                return $value->toArray();
-            }
-            return $value;
-        }, $this->items);
-    }
-    /**
-     * Get the collection of items as JSON.
-     *
-     * @param  int  $options
-     * @return string
-     */
-    public function toJson($options = 0)
-    {
-        return json_encode($this->jsonSerialize(), $options);
-    }
+	/**
+	 * Convert the object into something JSON serializable.
+	 *
+	 * @return array
+	 */
+	public function jsonSerialize()
+	{
+		return array_map(function ($value) {
+			if ($value instanceof JsonSerializable) {
+				return $value->jsonSerialize();
+			} elseif ($value instanceof Arrayable) {
+				return $value->toArray();
+			}
+			return $value;
+		}, $this->items);
+	}
+	/**
+	 * Get the collection of items as JSON.
+	 *
+	 * @param  int  $options
+	 * @return string
+	 */
+	public function toJson($options = 0)
+	{
+		return json_encode($this->jsonSerialize(), $options);
+	}
 
 	public function toArray()
 	{
 		return $this->items;
 	}
 
-    /**
-     * Get a base Support collection instance from this collection.
-     *
-     * @return \Mediavine\Support\Collection
-     */
-    public function toBase()
-    {
-        return new self($this);
+	/**
+	 * Get a base Support collection instance from this collection.
+	 *
+	 * @return \Mediavine\Support\Collection
+	 */
+	public function toBase()
+	{
+		return new self($this);
 	}
 
-    /**
-     * Determine if an item exists at an offset.
-     *
-     * @param  mixed  $key
-     * @return bool
-     */
-    public function offsetExists($key)
-    {
-        return array_key_exists($key, $this->items);
-    }
-    /**
-     * Get an item at a given offset.
-     *
-     * @param  mixed  $key
-     * @return mixed
-     */
-    public function offsetGet($key)
-    {
-        return $this->items[$key];
-    }
-    /**
-     * Set the item at a given offset.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $value
-     * @return void
-     */
-    public function offsetSet($key, $value)
-    {
-        if (is_null($key)) {
-            $this->items[] = $value;
-        } else {
-            $this->items[$key] = $value;
-        }
-    }
-    /**
-     * Unset the item at a given offset.
-     *
-     * @param  string  $key
-     * @return void
-     */
-    public function offsetUnset($key)
-    {
-        unset($this->items[$key]);
-    }
-    /**
-     * Convert the collection to its string representation.
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->toJson();
-    }
-
+	/**
+	 * Determine if an item exists at an offset.
+	 *
+	 * @param  mixed  $key
+	 * @return bool
+	 */
+	public function offsetExists($key)
+	{
+		return array_key_exists($key, $this->items);
+	}
+	/**
+	 * Get an item at a given offset.
+	 *
+	 * @param  mixed  $key
+	 * @return mixed
+	 */
+	public function offsetGet($key)
+	{
+		return $this->items[$key];
+	}
+	/**
+	 * Set the item at a given offset.
+	 *
+	 * @param  mixed  $key
+	 * @param  mixed  $value
+	 * @return void
+	 */
+	public function offsetSet($key, $value)
+	{
+		if (is_null($key)) {
+			$this->items[] = $value;
+		} else {
+			$this->items[$key] = $value;
+		}
+	}
+	/**
+	 * Unset the item at a given offset.
+	 *
+	 * @param  string  $key
+	 * @return void
+	 */
+	public function offsetUnset($key)
+	{
+		unset($this->items[$key]);
+	}
+	/**
+	 * Convert the collection to its string representation.
+	 *
+	 * @return string
+	 */
+	public function __toString()
+	{
+		return $this->toJson();
+	}
 }
+
