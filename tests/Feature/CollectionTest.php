@@ -50,4 +50,48 @@ class CollectionTest extends TestCase
         $this->assertCount(3, $arrayedChunks);
         $this->assertSame([[1,2], [3,4], [5,6]], $arrayedChunks);
     }
+
+    /**
+     * @test
+     */
+    function a_collection_can_be_flattened()
+    {
+        $collection = Collection::make([
+            'one' => [
+                [
+                    'title' => 'Test'
+                ],
+                [
+                    'title' => 'Test 2'
+                ]
+            ],
+            'two' => [
+                [
+                    'title' => 'Test 3',
+                    [
+                        'sub' => 'data',
+                        'more' => [
+                            'evenMore' => 'data'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+        $flattenedOnce = $collection->flatten(1)->all();
+        $flattenedTwice = $collection->flatten(2)->all();
+        $flattenedThrice = $collection->flatten(3)->all();
+        $flattenedInfinitely = $collection->flatten()->all();
+
+        $this->assertArrayNotHasKey('one', $flattenedOnce);
+        $this->assertArrayHasKey('title', $flattenedOnce[0]);
+
+        $this->assertNotSame($flattenedOnce[0], $flattenedTwice[0]);
+        $this->assertArrayHasKey('sub', $flattenedTwice[3]);
+
+        $this->assertNotSame($flattenedTwice[3], $flattenedThrice[3]);
+        $this->assertArrayHasKey('evenMore', $flattenedThrice[4]);
+
+        $this->assertNotSame($flattenedThrice[4], $flattenedInfinitely[4]);
+        $this->assertSame('data', $flattenedInfinitely[4]);
+    }
 }

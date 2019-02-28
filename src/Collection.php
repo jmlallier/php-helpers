@@ -4,6 +4,7 @@ namespace Jmlallier\PHPHelpers;
 
 use \Countable;
 use \IteratorAggregate;
+use Jmlallier\PHPHelpers\Arr;
 
 class Collection implements IteratorAggregate, Countable
 {
@@ -48,6 +49,10 @@ class Collection implements IteratorAggregate, Countable
 	public function filter($callback)
 	{
 		return new static(array_filter($this->items, $callback));
+	}
+
+	public function flatten($depth = INF) {
+		return new static(Arr::flatten($this->items, $depth));
 	}
 
 	public function all()
