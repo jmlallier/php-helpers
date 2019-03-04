@@ -53,7 +53,7 @@ class Collection implements IteratorAggregate, Countable
 
 	public function filter($callback)
 	{
-		return new static(array_filter($this->items, $callback));
+		return (new static(array_filter($this->items, $callback)))->values();
 	}
 
 	public function flatten($depth = INF)
@@ -445,6 +445,127 @@ class Collection implements IteratorAggregate, Countable
 	public function merge($items)
 	{
 		return new static(array_merge($this->items, $this->getArrayableItems($items)));
+	}
+
+	/**
+	 * Alias for the "contains" method.
+	 *
+	 * @param  mixed  $key
+	 * @param  mixed  $operator
+	 * @param  mixed  $value
+	 * @return bool
+	 */
+	public function some($key, $operator = null, $value = null)
+	{
+		return $this->contains(...func_get_args());
+	}
+
+	/**
+	 * Determine if an item exists in the collection.
+	 *
+	 * @param  mixed  $key
+	 * @param  mixed  $operator
+	 * @param  mixed  $value
+	 * @return bool
+	 */
+	public function contains($key, $operator = null, $value = null)
+	{
+		if (func_num_args() === 1) {
+			if ($this->useAsCallable($key)) {
+				$placeholder = new stdClass;
+				return $this->first($key, $placeholder) !== $placeholder;
+			}
+			return in_array($key, $this->items);
+		}
+		return $this->contains($this->operatorForWhere(...func_get_args()));
+	}
+
+	/**
+	 * Get an operator checker callback.
+	 *
+	 * @param  string  $key
+	 * @param  string  $operator
+	 * @param  mixed  $value
+	 * @return \Closure
+	 */
+	protected function operatorForWhere($key, $operator = null, $value = null)
+	{
+		if (func_num_args() === 1) {
+			$value = true;
+			$operator = '=';
+		}
+		if (func_num_args() === 2) {
+			$value = $operator;
+			$operator = '=';
+		}
+		return function ($item) use ($key, $operator, $value) {
+			$retrieved = Arr::data_get($item, $key);
+			$strings = array_filter([$retrieved, $value], function ($value) {
+				return is_string($value) || (is_object($value) && method_exists($value, '__toString'));
+			});
+			if (count($strings) < 2 && count(array_filter([$retrieved, $value], 'is_object')) == 1) {
+				return in_array($operator, ['!=', '<>', '!==']);
+			}
+			switch ($operator) {
+				default:
+				case '=':
+				case '==':  return $retrieved == $value;
+				case '!=':
+				case '<>':  return $retrieved != $value;
+				case '<':   return $retrieved < $value;
+				case '>':   return $retrieved > $value;
+				case '<=':  return $retrieved <= $value;
+				case '>=':  return $retrieved >= $value;
+				case '===': return $retrieved === $value;
+				case '!==': return $retrieved !== $value;
+			}
+		};
+	}
+
+	/**
+	 * Filter items by the given key value pair.
+	 *
+	 * @param  string  $key
+	 * @param  mixed  $operator
+	 * @param  mixed  $value
+	 * @return static
+	 */
+	public function where($key, $operator = null, $value = null)
+	{
+		return $this->filter($this->operatorForWhere(...func_get_args()));
+	}
+
+	/**
+	 * Filter the items, removing any items that don't match the given type.
+	 *
+	 * @param  string  $type
+	 * @return static
+	 */
+	public function whereInstanceOf($type)
+	{
+		return $this->filter(function ($value) use ($type) {
+			return $value instanceof $type;
+		});
+	}
+
+	/**
+	 * Determine if an item exists in the collection using strict comparison.
+	 *
+	 * @param  mixed  $key
+	 * @param  mixed  $value
+	 * @return bool
+	 */
+	public function containsStrict($key, $value = null)
+	{
+		if (func_num_args() === 2) {
+			return $this->contains(function ($item) use ($key, $value) {
+				return data_get($item, $key) === $value;
+			});
+		}
+		if ($this->useAsCallable($key)) {
+			return ! is_null($this->first($key));
+		}
+		return in_array($key, $this->items, true);
 	}
 
 	/**

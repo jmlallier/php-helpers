@@ -112,4 +112,27 @@ class CollectionTest extends TestCase
 		$this->assertEmpty(Collection::make($emptyArray)->first());
 		$this->assertEmpty(Collection::make($emptyArray)->last());
 	}
+
+	/**
+	 * @test
+	 */
+	function a_collection_can_be_filtered()
+	{
+		$array = [
+			[
+				'title' => 'Hamburger',
+				'type' => 'recipe'
+			],
+			[
+				'title' => '10 Best Recipes',
+				'type' => 'list'
+			]
+		];
+		$recipes = Collection::make($array)->where('type', 'recipe')->all();
+		$this->assertCount(1, $recipes);
+		$this->assertSame($array[0], $recipes[0]);
+		$lists = Collection::make($array)->where('type', 'list')->all();
+		$this->assertCount(1, $lists);
+		$this->assertSame($array[1], $lists[0]);
+	}
 }
