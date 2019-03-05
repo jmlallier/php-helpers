@@ -351,11 +351,12 @@ class Collection implements IteratorAggregate, Countable
 		return $this->newFrom($callback, $this);
 	}
 
-	public function get($key)
+	public function get($key, $default = null)
 	{
 		if (\array_key_exists($key, $this->items)) {
 			return $this->items[$key];
 		}
+		return $default;
 	}
 
 	/**
