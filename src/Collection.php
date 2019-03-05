@@ -354,7 +354,7 @@ class Collection implements IteratorAggregate, Countable
 	public function get($key)
 	{
 		if (\array_key_exists($key, $this->items)) {
-			return $this->getArrayableItems($this->items[$key]);
+			return $this->items[$key];
 		}
 	}
 

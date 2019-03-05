@@ -32,6 +32,10 @@ class CollectionTest extends TestCase
 		$this->assertEmpty($collection);
 		$collection = $collection->add($arr);
 		$this->assertSame($arr, $collection->all());
+
+		$collection = Collection::make(['key' => 'value'])->add(['anotherKey' => 'anotherValue']);
+		$this->assertArrayHasKey('anotherKey', $collection->all());
+		$this->assertSame($collection->get('anotherKey'), 'anotherValue');
 	}
 
 	/**
