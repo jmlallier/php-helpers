@@ -87,6 +87,23 @@ class Str {
 	}
 
 	/**
+	 * Determines whether string `$subject` ends with string `$search`.
+	 *
+	 * @param string|int $search
+	 * @param string $needle
+	 * @return boolean
+	 */
+	public static function beginsWith($search, $subject)
+	{
+		$search = (string) $search;
+		$length = strlen($search);
+		if ($length == 0) {
+			return true;
+		}
+		return substr($subject, 0, $length) === $search;
+	}
+
+	/**
 	 * Appends a string to the end of a string.
 	 *
 	 * @param string $append

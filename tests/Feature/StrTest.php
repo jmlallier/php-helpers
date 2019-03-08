@@ -73,11 +73,13 @@ class StrTest extends TestCase
     }
 
     /** @test */
-    public function it_determines_whether_a_string_ends_with_another_string()
+    public function it_determines_whether_a_string_begins_or_ends_with_another_string()
     {
         $subject = "I end with a bow.";
         $this->assertTrue(Str::endsWith('.', $subject));
         $this->assertFalse(Str::endsWith('bow', $subject));
+        $this->assertTrue(Str::beginsWith('I', $subject));
+        $this->assertFalse(Str::beginsWith('end', $subject));
     }
 
     /** @test */
