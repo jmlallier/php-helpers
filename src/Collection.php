@@ -53,7 +53,7 @@ class Collection implements IteratorAggregate, Countable
 
 	public function filter($callback)
 	{
-		return (new static(array_filter($this->items, $callback)));
+		return (new static(array_filter($this->items, $callback, ARRAY_FILTER_USE_BOTH)));
 	}
 
 	public function flatten($depth = INF)
