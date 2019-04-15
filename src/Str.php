@@ -55,16 +55,15 @@ class Str {
 	 * @param  string  $subject
 	 * @return string
 	 */
-	public static function replace( $search, $replace, $subject ) {
-		if ( empty( $search ) ) {
+	public static function replace( $search, $replace, $subject, $index = 0 ) {
+		if ( empty( $search ) || $search === $replace ) {
 			return $subject;
 		}
 		$search = (string) $search;
 		$replace = (string) $replace;
 		$position = strpos( $subject, $search );
 		if ( false !== $position ) {
-			$subject = substr_replace( $subject, $replace, $position, strlen( $search ) );
-			return static::replace( $search, $replace, $subject );
+			$subject = str_replace( $search, $replace, $subject );
 		}
 		return $subject;
 	}

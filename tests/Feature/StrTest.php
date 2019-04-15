@@ -6,7 +6,9 @@ use Jmlallier\PHPHelpers\Str;
 class StrTest extends TestCase
 {
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_determines_if_a_string_contains_a_search_term()
     {
         $subject = "Foo bar foo baz fizzbuzz";
@@ -14,7 +16,9 @@ class StrTest extends TestCase
         $this->assertFalse(Str::contains('biz', $subject));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_determines_if_any_of_an_array_of_strings_are_in_a_string()
     {
         $searches = [
@@ -27,20 +31,26 @@ class StrTest extends TestCase
         $this->assertFalse(Str::contains($searches, $subject));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_determine_if_a_string_is_equal_to_another_string()
     {
         $this->assertTrue(Str::is('foo', 'foo'));
         $this->assertFalse(Str::is('fiz', 'foo'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_is_case_sensitive()
     {
         $this->assertFalse(Str::is('Foo', 'foo'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_determine_if_any_of_an_array_of_strings_is_equal_to_another_string()
     {
         $strings = [
@@ -51,13 +61,17 @@ class StrTest extends TestCase
         $this->assertFalse(Str::is($strings, 'fizz'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_returns_the_length_of_a_string()
     {
         $this->assertEquals(4, Str::length('four'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_replaces_a_string_within_another_string()
     {
         $original = 'Two plus two equals three';
@@ -65,14 +79,42 @@ class StrTest extends TestCase
         $this->assertEquals($shouldReturn, Str::replace('three', 'four', $original));
     }
 
-    /** @test */
+    /**
+     * @test
+     */
+    function it_can_determine_if_a_string_has_already_been_replaced()
+    {
+        $original = '22';
+        $shouldReturn = '222';
+        $this->assertEquals($shouldReturn, Str::replace('22', '222', $original));
+
+        $original = 'replace me and replace me';
+        $shouldReturn = '[replace me] and [replace me]';
+        $this->assertEquals($shouldReturn, Str::replace('replace me', '[replace me]', $original));
+    }
+
+    /**
+     * @test
+     */
+    function it_does_not_replace_text_if_the_search_is_equal_to_the_replace()
+    {
+        $original = 'same';
+        $shouldReturn = 'same';
+        $this->assertEquals($shouldReturn, Str::replace('same', 'same', $original));
+    }
+
+    /**
+     * @test 
+     */
     public function it_returns_the_original_string_if_the_search_term_is_not_found()
     {
         $original = 'Two plus two equals four';
         $this->assertEquals($original, Str::replace('three', 'four', $original));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_determines_whether_a_string_begins_or_ends_with_another_string()
     {
         $subject = "I end with a bow.";
@@ -82,7 +124,9 @@ class StrTest extends TestCase
         $this->assertFalse(Str::beginsWith('end', $subject));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_forces_string_search_for_ending_search()
     {
         $subject = "We are #1";
@@ -91,7 +135,9 @@ class StrTest extends TestCase
     }
 
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_appends_a_string_to_another_string()
     {
         $original = "I'm a little";
@@ -100,7 +146,9 @@ class StrTest extends TestCase
         $this->assertEquals("I'm a little", Str::append('', $original));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_prepends_a_string_to_another_string()
     {
         $original = "let the dogs out?";
@@ -109,7 +157,9 @@ class StrTest extends TestCase
         $this->assertEquals("let the dogs out?", Str::prepend('', $original));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_combines_two_strings()
     {
         $string_one = "anchovy";
@@ -120,7 +170,9 @@ class StrTest extends TestCase
         $this->assertEquals("anchovy-pizza", Str::combine($strings, '-'));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_combines_many_strings()
     {
         $strings = [
